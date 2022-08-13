@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.method.annotation.RedirectAttributesMethodArgumentResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.common.entity.Role;
@@ -92,6 +93,19 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
 		}
 		
+		return "redirect:/users";
+	}
+	
+	@GetMapping("/users/{id}/enabled/{status}")
+	public String updateUserEnabledStatus(@PathVariable("id") Integer id,
+				@PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+		
+		service.updateUserEnabledStatus(id, enabled);
+		
+		String status = enabled ? "enabled" : "disabled";
+		String message = "The user with ID: " + id + " has been " + status +  "!";
+		
+		redirectAttributes.addFlashAttribute("message", message);
 		return "redirect:/users";
 	}
 }
